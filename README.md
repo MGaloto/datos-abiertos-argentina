@@ -8,6 +8,6 @@ Analisis y pronosticos de transferencia de automotores en Argentina.
   <img 
     width="500"
     height="300"
-    src="cars.png"
+    src="img/cars.png"
   >
 </p>
