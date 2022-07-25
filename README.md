@@ -51,11 +51,14 @@ Time Series.
 
 Los datos se pueden descargar de: 
 
+
 <ui>
 <li>
 https://www.datos.gob.ar/
 </li>
 </ui>
+
+
 
 Para descomprimir los archivos necesitamos las siguientes librerias y tener las url de los documentos .zip y guardarlos en _urls.txt_. 
 
