@@ -47,3 +47,60 @@ Time Series.
     src="img/cars.png"
   >
 </p>
+
+
+Los datos se pueden descargar de: 
+
+<ui>
+<li>
+https://www.datos.gob.ar/
+</li>
+</ui>
+
+Para descomprimir los archivos necesitamos las siguientes librerias y tener las url de los documentos .zip y guardarlos en _urls.txt_. 
+
+Con el siguiente codigo se descrompimen los archivos en la carpeta y, por ultimo, se concatenan cada uno de los .csv que hay dentro usando concat de pandas.
+
+```python
+
+from io import BytesIO
+from zipfile import ZipFile
+from urllib.request import urlopen
+from os import listdir
+
+def find_csv_filenames(path_to_dir, suffix=".csv" ):
+    filenames = listdir(path_to_dir)
+    return [ filename for filename in filenames if filename.endswith( suffix ) ]
+
+csv_files = [l for l in find_csv_filenames(folder_archivos, suffix=".csv" ) if 'autos' in l]
+
+```
+
+
+```python
+
+with open('urls.txt', 'r') as folder_urls:
+    lines_urls = folder_urls.readlines()
+
+if len(csv_files) == 0:
+    zipurls = lines_urls
+
+    for zipurl in zipurls:
+        with urlopen(zipurl) as zipresp:
+            with ZipFile(BytesIO(zipresp.read())) as zfile:
+                zfile.extractall(folder_archivos)
+
+```
+
+
+```python
+
+list_data_frames = []
+
+for file in csv_files:
+    df_new = pd.read_csv(file)
+    list_data_frames.append(df_new)
+
+df = pd.concat(list_data_frames, ignore_index=True)
+
+```
