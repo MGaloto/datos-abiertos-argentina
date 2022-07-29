@@ -1,5 +1,8 @@
 # datos-abiertos-argentina
 
+<p align="center">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apache_Spark_logo.svg/1280px-Apache_Spark_logo.svg.png" alt="react" width="300" height="150" />
+</p>
 
 Analisis y pronosticos de transferencia de automotores en Argentina.
 
@@ -104,6 +107,13 @@ for file in csv_files:
     df_new = pd.read_csv(file)
     list_data_frames.append(df_new)
 
-df = pd.concat(list_data_frames, ignore_index=True)
+def unionAll(*dfs):
+    return reduce(DataFrame.unionAll, dfs)
+
+df = unionAll(*list_data_frames)
+
+df = df.groupBy(['tramite_fecha','registro_seccional_provincia']).agg(count("registro_seccional_provincia").alias("count"))
+
+df.toPandas().to_csv('df.csv')
 
 ```
