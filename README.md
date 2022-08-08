@@ -45,9 +45,9 @@ Time Series.
 
 <p align="center">
   <img 
-    width="500"
+    width="550"
     height="300"
-    src="img/cars.png"
+    src="img/gf.gif"
   >
 </p>
 
