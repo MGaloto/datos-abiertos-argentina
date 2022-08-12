@@ -6,9 +6,7 @@
 
 Analisis y pronosticos de transferencia de automotores en Argentina.
 
-
-Trabajo en curso sobre visualizacion, estadisitica descriptiva y pronostico sobre transferencias de automotores para Argentina desde 2018 a 2022. El proposito final sera, luego de limpiar y visualizar bien los datos, generar series temporales a los efectos de poder predecir las transacciones futuras de compra y venta de autos usados. Se utilizaran distintos modelos de Time Series evaluando sus metricas y precision para estimar valores futuros.
-
+Trabajo en curso sobre datos de transferencias de automotores para Argentina desde 2018 a 2022. El proposito final sera, luego de limpiar y visualizar los datos, generar series temporales a los efectos de poder predecir las transacciones futuras de compra y venta de autos usados. Se utilizaran distintos modelos de Time Series evaluando sus metricas y precision para estimar valores futuros.
 
 
 <p>
@@ -18,7 +16,7 @@ Trabajo en curso sobre visualizacion, estadisitica descriptiva y pronostico sobr
 
 # Presentacion
 
-El trabajo final se presenta en una Notebook de Jupyter y en un documentos R Markdown.
+El trabajo final se presenta en una Notebook de Jupyter y en un documentos R Markdown con el analisis de las series temporales y los pronosticos.
 
 # Incluye
 
@@ -42,6 +40,9 @@ Time Series.
 
 </ui>
 
+# Serie Temporal 
+
+A continuacion una muestra de la serie temporal diaria con una media movil para suavizarla y poder visualizar si existe estacionalidad. 
 
 <p align="center">
   <img 
@@ -54,14 +55,11 @@ Time Series.
 
 Los datos se pueden descargar de: 
 
-
 <ui>
 <li>
 https://www.datos.gob.ar/
 </li>
 </ui>
-
-
 
 Para descomprimir los archivos necesitamos las siguientes librerias y tener las url de los documentos .zip y guardarlos en _urls.txt_. 
 
@@ -117,3 +115,39 @@ df = df.groupBy(['tramite_fecha','registro_seccional_provincia']).agg(count("reg
 df.toPandas().to_csv('df.csv')
 
 ```
+
+Si estuvieramos usando una base de datos estructurada se pueden hacer consultas desde la misma base de datos utilizando Pyspark con codigo Sql.
+
+Ejemplo del codigo para la query:
+
+```python
+
+import findspark
+findspark.init()
+# Se importa el contexto de Spark
+from pyspark import SparkContext 
+from pyspark.sql import SparkSession
+from pyspark.sql import SQLContext
+
+# El inicializador se encuentra en local bajo el nombre autos
+sc = SparkSession.builder.master('local').appName('autos').getOrCreate()
+
+# Con SQLContext vamos a poder utilizar lenguaje SQL
+sqlContext = SQLContext(sc)
+
+
+df = sc.read.format("jdbc") \
+    .option("url","jdbc:mysql://localhost/santander_db") \
+    .option("driver","com.mysql.jdbc.Driver") \
+    .option("dbtable","clientes_hb") \
+    .option("user","<user>") \
+    .option("password","<password>") \
+    .option("query", "<query sql>").load()
+
+# Accion
+df.show()
+
+
+```
+
+Continua..
