@@ -32,7 +32,7 @@ Limpieza del Data Set.
 </li>
 
 <li>
-Graficos Dinamicos y Estaticos.
+Graficos.
 </li>
 
 <li>
@@ -159,6 +159,7 @@ Luego de visualizar las series diarias elabore un grafico de series temporales c
   <img 
     width="550"
     height="400"
-    src="estacional.png"
+    src="img/estacional.png"
   >
 </p>
+
