@@ -8,6 +8,7 @@ Analisis y pronosticos de transferencia de automotores en Argentina.
 
 Trabajo en curso sobre datos de transferencias de automotores para Argentina desde 2018 a 2022. El proposito final sera, luego de limpiar y visualizar los datos, generar series temporales a los efectos de poder predecir las transacciones futuras de compra y venta de autos usados. Se utilizaran distintos modelos de Time Series evaluando sus metricas y precision para estimar valores futuros.
 
+Se utiliza la libreria Pyspark para hacer la extraccion y agregacion de los datos.
 
 <p>
 <a href="https://scikit-learn.org/stable/" rel="nofollow"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Python.svg/1024px-Python.svg.png" align="right" width="200" style="max-width: 100%;"></a>
@@ -42,7 +43,7 @@ Time Series.
 
 # Serie Temporal 
 
-A continuacion una muestra de la serie temporal diaria con una media movil para suavizarla y poder visualizar si existe estacionalidad. 
+A continuacion una muestra de la serie temporal diaria con una media movil para suavizarla.
 
 <p align="center">
   <img 
@@ -150,4 +151,14 @@ df.show()
 
 ```
 
-Continua..
+Luego de visualizar las series diarias elabore un grafico de series temporales con el promedio mensual de transacciones con el proposito de poder visualizar si existe estacionalidad a simple vista:
+
+* Se pueden ver picos en algunos meses, podriamos deducir que hay estacionalidad a simple vista.
+
+<p align="center">
+  <img 
+    width="550"
+    height="400"
+    src="estacional.png"
+  >
+</p>
