@@ -6,7 +6,7 @@
 
 Analisis y pronosticos de transferencia de automotores en Argentina.
 
-Trabajo en curso sobre datos de transferencias de automotores para Argentina desde 2018 a 2022. El proposito final sera, luego de limpiar y visualizar los datos, generar series temporales a los efectos de poder predecir las transacciones futuras de compra y venta de autos usados. Se utilizaran distintos modelos de Time Series evaluando sus metricas y precision para estimar valores futuros.
+Trabajo en curso sobre la cantidad de transferencias de automotores para Argentina desde 2018 a 2022. El proposito final sera, luego de limpiar y visualizar los datos, generar series temporales a los efectos de poder predecir las transacciones futuras de compra y venta de autos usados. Se utilizaran distintos modelos de Time Series evaluando sus metricas y precision para estimar valores futuros.
 
 Se utiliza la libreria Pyspark para hacer la extraccion y agregacion de los datos.
 
@@ -163,3 +163,55 @@ Luego de visualizar las series diarias elabore un grafico de series temporales c
   >
 </p>
 
+
+Para el entrenamiento y testeo de los modelos de series temporales se van a estar utilizando los dias diarios. 
+Con el siguiente codigo podemos dejar solo los dias habiles en el set de datos.
+
+```python
+from pandas.tseries.offsets import BDay
+isBusinessDay = BDay().onOffset
+
+
+match_series = pd.to_datetime(df['tramite_fecha']).map(isBusinessDay)
+
+df = df[match_series]
+```
+
+Es importante tener en cuenta que cuando trabajamos con Time Series los datos de testeo deben ser los ultimos ya que vamos a pronosticar el futuro. Para poder separar bien el set de datos hay que setear shuffle en False.
+
+```python
+
+n_test = # Numero de valores para testear
+
+train, test = train_test_split(dataframe, test_size = n_test, random_state = 10, shuffle = False)
+```
+
+Se probaron 4 modelos distintos. Uno de ellos utilizando una tendencia cuadratica con n grados y n features. Con la siguiente funcion se crea un data frame con una cantidad de variables igual al grado.
+
+
+```python
+def get_df_grado(data, grado, n_rows):
+    dfm = data.copy()
+    dfm['timeindex'] = np.arange(0, n_rows, 1)
+    for i in range(1 , grado + 1):
+        dfm[f'timeindex_{i}'] = dfm['timeindex']**i
+    return dfm
+        
+dataframe = get_df_grado(df_p, 30, df_p.shape[0])
+```
+
+Otro de los modelos es con variables dummies. Teniendo en cuenta nuestra variable a pronosticar con las fechas se pueden crear variables dummies por año, mes y dia para capturar estacionalidad y 
+y distintos aspectos que hacen a la variabilidad de la serie temporal.
+
+Para este modelo se utilizo una regresion lineal multiple.
+
+```python
+df_p['month'] = [d.strftime('%b') for d in df_p.index]
+df_p['day']   = [d.strftime('%A') for d in df_p.index]
+
+df_p = df_p.join(pd.get_dummies(df_p[['month', 'day']]))
+
+df_p.drop(columns = ['month','day','year'], inplace = True)
+
+
+```
