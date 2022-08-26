@@ -185,33 +185,3 @@ n_test = # Numero de valores para testear
 
 train, test = train_test_split(dataframe, test_size = n_test, random_state = 10, shuffle = False)
 ```
-
-Se probaron 4 modelos distintos. Uno de ellos utilizando una tendencia cuadratica con n grados y n features. Con la siguiente funcion se crea un data frame con una cantidad de variables igual al grado.
-
-
-```python
-def get_df_grado(data, grado, n_rows):
-    dfm = data.copy()
-    dfm['timeindex'] = np.arange(0, n_rows, 1)
-    for i in range(1 , grado + 1):
-        dfm[f'timeindex_{i}'] = dfm['timeindex']**i
-    return dfm
-        
-dataframe = get_df_grado(df_p, 30, df_p.shape[0])
-```
-
-Otro de los modelos es con variables dummies. Teniendo en cuenta nuestra variable a pronosticar con las fechas se pueden crear variables dummies por año, mes y dia para capturar estacionalidad y 
-y distintos aspectos que hacen a la variabilidad de la serie temporal.
-
-Para este modelo se utilizo una regresion lineal multiple.
-
-```python
-df_p['month'] = [d.strftime('%b') for d in df_p.index]
-df_p['day']   = [d.strftime('%A') for d in df_p.index]
-
-df_p = df_p.join(pd.get_dummies(df_p[['month', 'day']]))
-
-df_p.drop(columns = ['month','day','year'], inplace = True)
-
-
-```
