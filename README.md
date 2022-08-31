@@ -117,39 +117,6 @@ df.toPandas().to_csv('df.csv')
 
 ```
 
-Si estuvieramos usando una base de datos estructurada se pueden hacer consultas desde la misma base de datos utilizando Pyspark con codigo Sql.
-
-Ejemplo del codigo para la query:
-
-```python
-
-import findspark
-findspark.init()
-# Se importa el contexto de Spark
-from pyspark import SparkContext 
-from pyspark.sql import SparkSession
-from pyspark.sql import SQLContext
-
-# El inicializador se encuentra en local bajo el nombre autos
-sc = SparkSession.builder.master('local').appName('autos').getOrCreate()
-
-# Con SQLContext vamos a poder utilizar lenguaje SQL
-sqlContext = SQLContext(sc)
-
-
-df = sc.read.format("jdbc") \
-    .option("url","jdbc:mysql://localhost/santander_db") \
-    .option("driver","com.mysql.jdbc.Driver") \
-    .option("dbtable","clientes_hb") \
-    .option("user","<user>") \
-    .option("password","<password>") \
-    .option("query", "<query sql>").load()
-
-# Accion
-df.show()
-
-
-```
 
 Luego de visualizar las series diarias elabore un grafico de series temporales con el promedio mensual de transacciones con el proposito de poder visualizar si existe estacionalidad a simple vista:
 
